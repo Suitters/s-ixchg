@@ -1,0 +1,187 @@
+{
+    "version": "V1",
+    "extends_for": "pysui",
+    "builderFunctions":
+    [
+        {
+            "name": "publish",
+            "arguments": [
+                {
+                    "name": "project_path",
+                    "required": true,
+                    "type": ["string"]
+                },
+                {
+                    "name": "with_unpublished_dependencies",
+                    "required": false,
+                    "type": ["boolean"]
+                },
+                {
+                    "name": "skip_fetch_latest_git_deps",
+                    "required": false,
+                    "type": ["boolean"]
+                },
+                {
+                    "name": "recipient",
+                    "required": false,
+                    "type": ["address"]
+                }
+            ],
+            "has_return": true,
+            "returns": "single",
+            "return_id": "upgrade_cap"
+        },
+        {
+            "name": "publish_upgrade",
+            "arguments": [
+                {
+                    "name": "project_path",
+                    "required": true,
+                    "type": ["string"]
+                },
+                {
+                    "name": "package_id",
+                    "required": true,
+                    "type": ["string","object-id"]
+                },
+                {
+                    "name": "upgrade_cap",
+                    "required": true,
+                    "type": ["string","object-id"]
+                },
+                {
+                    "name": "with_unpublished_dependencies",
+                    "required": false,
+                    "type": ["boolean"]
+                },
+                {
+                    "name": "skip_fetch_latest_git_deps",
+                    "required": false,
+                    "type": ["boolean"]
+                },
+                {
+                    "name": "legacy_digest",
+                    "required": false,
+                    "type": ["boolean"]
+                }
+            ],
+            "has_return": true,
+            "returns": "single",
+            "return_id": "upgrade_cap"
+        },
+        {
+            "name": "public_transfer_object",
+            "arguments": [
+                {
+                    "name": "objects",
+                    "required": true,
+                    "type": ["object-id","result"]
+                },
+                {
+                    "name": "address",
+                    "required": true,
+                    "type": ["string","address"]
+                }
+            ],
+            "has_return": false
+        },
+        {
+            "name": "transfer_sui",
+            "arguments": [
+                {
+                    "name": "recipient",
+                    "required": true,
+                    "type": ["address"]
+                },
+                {
+                    "name": "from_coin",
+                    "required": true,
+                    "type": ["object-id","result"]
+                },
+                {
+                    "name": "amount",
+                    "required": true,
+                    "type": ["integer"]
+                }
+            ],
+            "has_return": false
+        },
+        {
+            "name": "split_coin_equal",
+            "arguments": [
+                {
+                    "name": "coin",
+                    "required": true,
+                    "type": ["string","object-id","gas","result"]
+                },
+                {
+                    "name": "count",
+                    "required": true,
+                    "type": ["integer"]
+                },
+                {
+                    "name": "coin_type",
+                    "required": false,
+                    "type": ["string"]
+                }
+            ],
+            "has_return": false
+        },
+        {
+            "name": "split_coin_and_return",
+            "arguments": [
+                {
+                    "name": "coin",
+                    "required": true,
+                    "type": ["string","object-id","gas","result"]
+                },
+                {
+                    "name": "count",
+                    "required": true,
+                    "type": ["integer"]
+                },
+                {
+                    "name": "coin_type",
+                    "required": false,
+                    "type": ["string"]
+                }
+            ],
+            "has_return": true,
+            "returns": "multiple",
+            "return_id": "split_results"
+        },
+        {
+            "name": "stake_coin",
+            "arguments": [
+                {
+                    "name": "coins",
+                    "required": true,
+                    "type": ["list"],
+                    "items": ["object-id"]
+                },
+                {
+                    "name": "validator_address",
+                    "required": true,
+                    "type": ["address"]
+                },
+                {
+                    "name": "amount",
+                    "required": false,
+                    "type": ["integer"]
+                }
+            ],
+            "has_return": false
+        },
+        {
+            "name": "unstake_coin",
+            "arguments": [
+                {
+                    "name": "coin",
+                    "required": true,
+                    "type": ["object-id"]
+                }
+            ],
+            "has_return": false
+        }
+    ]
+}

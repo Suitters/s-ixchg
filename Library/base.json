@@ -1,0 +1,119 @@
+{
+    "version": "V1",
+    "builderFunctions":
+    [
+        {
+            "name": "split_coins",
+            "arguments": [
+                {
+                    "name": "coin",
+                    "required": true,
+                    "type": ["string","object-id","gas","result"]
+                },
+                {
+                    "name": "amounts",
+                    "required": true,
+                    "type": ["list"],
+                    "items":["integer"]
+                }
+            ],
+            "has_return": true,
+            "returns": "multiple",
+            "return_id": "coin_result"
+        },
+        {
+            "name": "merge_coins",
+            "arguments": [
+                {
+                    "name": "destination_coin",
+                    "required": true,
+                    "type": ["object-id","gas","result"]
+                },
+                {
+                    "name": "source_coins",
+                    "required": true,
+                    "type": ["object-id","result"]
+                }
+            ],
+            "has_return": false
+        },
+        {
+            "name": "transfer_objects",
+            "arguments": [
+                {
+                    "name": "objects",
+                    "required": true,
+                    "type": ["list"],
+                    "items":["object-id","result"]
+                },
+                {
+                    "name": "address",
+                    "required": true,
+                    "type": ["string","address"]
+                }
+            ],
+            "has_return": false
+        },
+        {
+            "name": "move_call",
+            "arguments": [
+                {
+                    "name": "target",
+                    "required": true,
+                    "type": ["string"]
+                },
+                {
+                    "name": "arguments",
+                    "required": false,
+                    "type": ["list"],
+                    "items": ["result","object-id","string","number","list"]
+                },
+                {
+                    "name": "type_arguments",
+                    "required": false,
+                    "type": ["list"],
+                    "items": ["string"]
+                }
+            ],
+            "has_return": true,
+            "returns": "multiple",
+            "return_id": "call_result"
+        },
+        {
+            "name": "make_move_vec",
+            "arguments": [
+                {
+                    "name": "objects",
+                    "required": true,
+                    "type": ["list"],
+                    "items": ["object-id"]
+                }
+            ],
+            "has_return": true,
+            "returns": "single",
+            "return_id": "vec_result"
+
+        },
+        {
+            "name": "publish",
+            "arguments": [
+                {
+                    "name": "modules",
+                    "required": true,
+                    "type": ["list"],
+                    "items": ["string"]
+                },
+                {
+                    "name": "dependencies",
+                    "required": true,
+                    "type": ["list"],
+                    "items": ["string"]
+                }
+
+            ],
+            "has_return": true,
+            "returns": "single",
+            "return_id": "upgrade_cap"
+        }
+    ]
+}

@@ -1,0 +1,97 @@
+{
+    "name": "sample",
+    "version": "V1",
+    "aliases":
+    [
+        {
+            "name": "Owner",
+            "type": "address",
+            "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
+        },
+        {
+            "name": "Payer",
+            "type": "address",
+            "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
+        },
+        {
+            "name": "PaysWith",
+            "type": "object",
+            "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
+        },
+        {
+            "name": "MySpecialObject",
+            "type": "object",
+            "value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
+        },
+        {
+            "name": "MySpecialObjectType",
+            "type": "string",
+            "value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
+        },
+        {
+            "name": "Mint",
+            "type": "move-function",
+            "value": "0xcc9f55f5403e5df0ec802b3bf6f9849e0fe85ae3fa29c166d066425aa96b6ea9::sample::mint",
+            "has_return": true,
+            "returns": "single",
+            "return_id": "mint_token"
+        }
+    ],
+    "transactions": [
+        {
+            "name":"T1",
+            "sender": {
+                "$ref": "#Owner"
+            },
+            "sponsor": {
+                "$ref": "#Payer"
+            },
+            "aliases": [
+                {
+                    "name": "Reciever",
+                    "type": "address",
+                    "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
+                }
+
+            ],
+            "commands":[
+                {
+                    "name": "mint-it",
+                    "command": "move-call",
+                    "target":
+                    {
+                        "$ref": "#Mint"
+                    },
+                    "arguments": [
+                        {
+                            "$ref": "#MySpecialObject"
+                        }
+                    ],
+                    "type-arguments":
+                    [
+                        "x::y::z"
+                    ]
+                },
+                {
+                    "name": "send-it",
+                    "command": "transfer-object",
+                    "objects":
+                    [
+                        {
+                            "$ref": "#Mint/return_id"
+                        }
+                    ],
+                    "recipient":
+                    {
+                        "$ref": "#Reciever"
+                    }
+                }
+            ]
+        },
+        {
+            "name":"T2"
+
+        }
+    ]
+
+}

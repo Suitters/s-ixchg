@@ -4,17 +4,17 @@
     [
         {
             "name": "split_coins",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "coin",
                     "required": true,
-                    "type": ["string","object-id","gas","result"]
+                    "argument_type": ["string","object-id","gas","result"]
                 },
                 {
                     "name": "amounts",
                     "required": true,
-                    "type": ["list"],
-                    "items":["integer"]
+                    "argument_type": ["list"],
+                    "item":["integer"]
                 }
             ],
             "has_return": true,
@@ -23,56 +23,56 @@
         },
         {
             "name": "merge_coins",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "destination_coin",
                     "required": true,
-                    "type": ["object-id","gas","result"]
+                    "argument_type": ["object-id","gas","result"]
                 },
                 {
                     "name": "source_coins",
                     "required": true,
-                    "type": ["object-id","result"]
+                    "argument_type": ["object-id","result"]
                 }
             ],
             "has_return": false
         },
         {
             "name": "transfer_objects",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "objects",
                     "required": true,
-                    "type": ["list"],
-                    "items":["object-id","result"]
+                    "argument_type": ["list"],
+                    "item":["object-id","result"]
                 },
                 {
                     "name": "address",
                     "required": true,
-                    "type": ["string","address"]
+                    "argument_type": ["string","address"]
                 }
             ],
             "has_return": false
         },
         {
             "name": "move_call",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "target",
                     "required": true,
-                    "type": ["string"]
+                    "argument_type": ["string"]
                 },
                 {
-                    "name": "arguments",
+                    "name": "function_arguments",
                     "required": false,
-                    "type": ["list"],
-                    "items": ["result","object-id","string","number","list"]
+                    "argument_type": ["list"],
+                    "item": ["result","object-id","string","number","list"]
                 },
                 {
-                    "name": "type_arguments",
+                    "name": "argument_type_function_arguments",
                     "required": false,
-                    "type": ["list"],
-                    "items": ["string"]
+                    "argument_type": ["list"],
+                    "item": ["string"]
                 }
             ],
             "has_return": true,
@@ -81,12 +81,12 @@
         },
         {
             "name": "make_move_vec",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "objects",
                     "required": true,
-                    "type": ["list"],
-                    "items": ["object-id"]
+                    "argument_type": ["list"],
+                    "item": ["object-id"]
                 }
             ],
             "has_return": true,
@@ -96,18 +96,18 @@
         },
         {
             "name": "publish",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "modules",
                     "required": true,
-                    "type": ["list"],
-                    "items": ["string"]
+                    "argument_type": ["list"],
+                    "item": ["string"]
                 },
                 {
                     "name": "dependencies",
                     "required": true,
-                    "type": ["list"],
-                    "items": ["string"]
+                    "argument_type": ["list"],
+                    "item": ["string"]
                 }
 
             ],

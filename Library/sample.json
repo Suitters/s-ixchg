@@ -25,7 +25,7 @@
             "value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
         },
         {
-            "name": "MySpecialObjectType",
+            "name": "MintType",
             "type": "string",
             "value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
         },
@@ -65,7 +65,7 @@
                     },
                     "arguments": [
                         {
-                            "$ref": "#MySpecialObject"
+                            "$ref": "#MintType"
                         }
                     ],
                     "type-arguments":
@@ -88,10 +88,6 @@
                     }
                 }
             ]
-        },
-        {
-            "name":"T2"
-
         }
     ]
 

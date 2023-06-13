@@ -5,26 +5,26 @@
     [
         {
             "name": "publish",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "project_path",
                     "required": true,
-                    "type": ["string"]
+                    "argument_type": ["string"]
                 },
                 {
                     "name": "with_unpublished_dependencies",
                     "required": false,
-                    "type": ["boolean"]
+                    "argument_type": ["boolean"]
                 },
                 {
                     "name": "skip_fetch_latest_git_deps",
                     "required": false,
-                    "type": ["boolean"]
+                    "argument_type": ["boolean"]
                 },
                 {
                     "name": "recipient",
                     "required": false,
-                    "type": ["address"]
+                    "argument_type": ["address"]
                 }
             ],
             "has_return": true,
@@ -33,36 +33,36 @@
         },
         {
             "name": "publish_upgrade",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "project_path",
                     "required": true,
-                    "type": ["string"]
+                    "argument_type": ["string"]
                 },
                 {
                     "name": "package_id",
                     "required": true,
-                    "type": ["string","object-id"]
+                    "argument_type": ["string","object-id"]
                 },
                 {
                     "name": "upgrade_cap",
                     "required": true,
-                    "type": ["string","object-id"]
+                    "argument_type": ["string","object-id"]
                 },
                 {
                     "name": "with_unpublished_dependencies",
                     "required": false,
-                    "type": ["boolean"]
+                    "argument_type": ["boolean"]
                 },
                 {
                     "name": "skip_fetch_latest_git_deps",
                     "required": false,
-                    "type": ["boolean"]
+                    "argument_type": ["boolean"]
                 },
                 {
                     "name": "legacy_digest",
                     "required": false,
-                    "type": ["boolean"]
+                    "argument_type": ["boolean"]
                 }
             ],
             "has_return": true,
@@ -71,79 +71,79 @@
         },
         {
             "name": "public_transfer_object",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "objects",
                     "required": true,
-                    "type": ["object-id","result"]
+                    "argument_type": ["object-id","result"]
                 },
                 {
                     "name": "address",
                     "required": true,
-                    "type": ["string","address"]
+                    "argument_type": ["string","address"]
                 }
             ],
             "has_return": false
         },
         {
             "name": "transfer_sui",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "recipient",
                     "required": true,
-                    "type": ["address"]
+                    "argument_type": ["address"]
                 },
                 {
                     "name": "from_coin",
                     "required": true,
-                    "type": ["object-id","result"]
+                    "argument_type": ["object-id","result"]
                 },
                 {
                     "name": "amount",
                     "required": true,
-                    "type": ["integer"]
+                    "argument_type": ["integer"]
                 }
             ],
             "has_return": false
         },
         {
             "name": "split_coin_equal",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "coin",
                     "required": true,
-                    "type": ["string","object-id","gas","result"]
+                    "argument_type": ["string","object-id","gas","result"]
                 },
                 {
                     "name": "count",
                     "required": true,
-                    "type": ["integer"]
+                    "argument_type": ["integer"]
                 },
                 {
-                    "name": "coin_type",
+                    "name": "coin_argument_type",
                     "required": false,
-                    "type": ["string"]
+                    "argument_type": ["string"]
                 }
             ],
             "has_return": false
         },
         {
             "name": "split_coin_and_return",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "coin",
                     "required": true,
-                    "type": ["string","object-id","gas","result"]
+                    "argument_type": ["string","object-id","gas","result"]
                 },
                 {
                     "name": "count",
                     "required": true,
-                    "type": ["integer"]
+                    "argument_type": ["integer"]
                 },
                 {
-                    "name": "coin_type",
+                    "name": "coin_argument_type",
                     "required": false,
-                    "type": ["string"]
+                    "argument_type": ["string"]
                 }
             ],
             "has_return": true,
@@ -152,33 +152,33 @@
         },
         {
             "name": "stake_coin",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "coins",
                     "required": true,
-                    "type": ["list"],
-                    "items": ["object-id"]
+                    "argument_type": ["list"],
+                    "item": ["object-id"]
                 },
                 {
                     "name": "validator_address",
                     "required": true,
-                    "type": ["address"]
+                    "argument_type": ["address"]
                 },
                 {
                     "name": "amount",
                     "required": false,
-                    "type": ["integer"]
+                    "argument_type": ["integer"]
                 }
             ],
             "has_return": false
         },
         {
             "name": "unstake_coin",
-            "arguments": [
+            "function_arguments": [
                 {
                     "name": "coin",
                     "required": true,
-                    "type": ["object-id"]
+                    "argument_type": ["object-id"]
                 }
             ],
             "has_return": false

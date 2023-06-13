@@ -191,8 +191,12 @@ class BuilderArguments(DataClassJsonMixin):
 
     name: str
     required: bool
-    arg_type: list[str] = field(metadata=config(field_name="type"))
-    items: Optional[list[str]] = field(default_factory=list)
+    argument_type: list[str]
+    item: Optional[list[str]] = field(default_factory=list)
+
+    # TODO: type and item verifications
+    def __post_init__(self) -> None:
+        """."""
 
 
 @dataclass
@@ -201,7 +205,7 @@ class BuilderFunction(DataClassJsonMixin):
 
     name: str
     has_return: bool
-    arguments: Optional[list[BuilderArguments]] = field(default_factory=list)
+    function_arguments: Optional[list[BuilderArguments]] = field(default_factory=list)
     returns: Optional[str] = field(default_factory=str)
     result: Optional[str] = field(default_factory=str)
 

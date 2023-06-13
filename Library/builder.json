@@ -19,7 +19,7 @@
             ],
             "has_return": true,
             "returns": "multiple",
-            "return_id": "coin_result"
+            "result": "coin_result"
         },
         {
             "name": "merge_coins",
@@ -77,7 +77,7 @@
             ],
             "has_return": true,
             "returns": "multiple",
-            "return_id": "call_result"
+            "result": "call_result"
         },
         {
             "name": "make_move_vec",
@@ -91,7 +91,7 @@
             ],
             "has_return": true,
             "returns": "single",
-            "return_id": "vec_result"
+            "result": "vec_result"
 
         },
         {
@@ -113,7 +113,7 @@
             ],
             "has_return": true,
             "returns": "single",
-            "return_id": "upgrade_cap"
+            "result": "upgrade_cap"
         }
     ]
 }

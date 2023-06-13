@@ -1,5 +1,6 @@
 {
     "name": "sample",
+    "description": "A sample for demonstration",
     "version": "V1",
     "aliases":
     [

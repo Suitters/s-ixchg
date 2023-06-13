@@ -1,6 +1,6 @@
 {
     "version": "V1",
-    "extends_for": "pysui",
+    "extension_for": "pysui",
     "builderFunctions":
     [
         {
@@ -29,7 +29,7 @@
             ],
             "has_return": true,
             "returns": "single",
-            "return_id": "upgrade_cap"
+            "result": "upgrade_cap"
         },
         {
             "name": "publish_upgrade",
@@ -67,7 +67,7 @@
             ],
             "has_return": true,
             "returns": "single",
-            "return_id": "upgrade_cap"
+            "result": "upgrade_cap"
         },
         {
             "name": "public_transfer_object",
@@ -148,7 +148,7 @@
             ],
             "has_return": true,
             "returns": "multiple",
-            "return_id": "split_results"
+            "result": "split_results"
         },
         {
             "name": "stake_coin",

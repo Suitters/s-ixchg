@@ -45,7 +45,7 @@
             "commands":[
                 {
                     "name": "mint-it",
-                    "command": "move-call",
+                    "builder_command": "move_call",
                     "target":
                     {
                         "$ref": "#Mint"
@@ -62,7 +62,7 @@
                 },
                 {
                     "name": "send-it",
-                    "command": "transfer-object",
+                    "builder_command": "transfer_objects",
                     "objects":
                     [
                         {

@@ -65,12 +65,37 @@ module
     : name version description? aliases transactions
     ;
 
+transactions
+    : transaction
+    ;
+
+transaction
+    : name description? sender? sponsor? version aliases commands
+
+sender
+    : address | backref
+    ;
+
+sponsor
+    : address | backref
+    ;
+
+commands
+    : command*
+    ;
+
+command
+    : name builder_command arguments type_arguments
+    ;
+
+
 aliases:
     : alias*
     ;
 
 alias
     : name alias_type alias_value
+
 
 (***************************************************************************************)
 (* low level productions and terminals                                                 *)

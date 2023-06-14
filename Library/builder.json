@@ -27,12 +27,13 @@
                 {
                     "name": "destination_coin",
                     "required": true,
-                    "argument_type": ["object-id","gas","result"]
+                    "argument_type": ["string","object-id","gas","result"]
                 },
                 {
                     "name": "source_coins",
                     "required": true,
-                    "argument_type": ["object-id","result"]
+                    "argument_type": ["list"],
+                    "item": ["string","object-id","result"]
                 }
             ],
             "has_return": false
@@ -44,10 +45,10 @@
                     "name": "objects",
                     "required": true,
                     "argument_type": ["list"],
-                    "item":["object-id","result"]
+                    "item":["string","object-id","result"]
                 },
                 {
-                    "name": "address",
+                    "name": "recipient",
                     "required": true,
                     "argument_type": ["string","address"]
                 }
@@ -63,13 +64,13 @@
                     "argument_type": ["string"]
                 },
                 {
-                    "name": "function_arguments",
+                    "name": "arguments",
                     "required": false,
                     "argument_type": ["list"],
                     "item": ["result","object-id","string","number","list"]
                 },
                 {
-                    "name": "argument_type_function_arguments",
+                    "name": "type_arguments",
                     "required": false,
                     "argument_type": ["list"],
                     "item": ["string"]

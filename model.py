@@ -4,13 +4,22 @@ from dataclasses import dataclass, field
 from typing import Optional, Union, Any
 from dataclasses_json import DataClassJsonMixin, LetterCase, config
 
+#####################
+# Aliases           #
+#####################
+
 
 @dataclass
-class NumberAlias(DataClassJsonMixin):
+class Alias(DataClassJsonMixin):
     """."""
 
     alias_type: str
     alias_value: Union[str, dict]
+
+
+@dataclass
+class NumberAlias(Alias):
+    """."""
 
     def as_pysui_type(self) -> Any:
         """."""
@@ -22,11 +31,8 @@ class NumberAlias(DataClassJsonMixin):
 
 
 @dataclass
-class StringAlias(DataClassJsonMixin):
+class StringAlias(Alias):
     """."""
-
-    alias_type: str
-    alias_value: Union[str, dict]
 
     def as_pysui_type(self) -> Any:
         """."""
@@ -38,11 +44,8 @@ class StringAlias(DataClassJsonMixin):
 
 
 @dataclass
-class AddressAlias(DataClassJsonMixin):
+class AddressAlias(Alias):
     """."""
-
-    alias_type: str
-    alias_value: Union[str, dict]
 
     def as_pysui_type(self) -> Any:
         """."""
@@ -54,11 +57,8 @@ class AddressAlias(DataClassJsonMixin):
 
 
 @dataclass
-class ObjectAlias(DataClassJsonMixin):
+class ObjectAlias(Alias):
     """."""
-
-    alias_type: str
-    alias_value: Union[str, dict]
 
     def as_pysui_type(self) -> Any:
         """."""
@@ -70,11 +70,9 @@ class ObjectAlias(DataClassJsonMixin):
 
 
 @dataclass
-class MoveFunctionAlias(DataClassJsonMixin):
+class MoveFunctionAlias(Alias):
     """."""
 
-    alias_type: str
-    alias_value: Union[str, dict]
     has_return: bool
     returns: str
     result: str
@@ -110,6 +108,99 @@ def _build_alias_definition(alias_def: dict) -> Union[tuple[str, Any], Exception
     raise ValueError(f"Unknown alias type {alias_def}")
 
 
+#####################
+# Commands          #
+#####################
+
+
+@dataclass
+class Command(DataClassJsonMixin):
+    """."""
+
+    name: str
+    builder_command: str
+
+
+@dataclass
+class SplitCoinsCommand(Command):
+    """."""
+
+    coin: Union[str, dict]
+    amounts: list[Union[str, dict]]
+
+
+@dataclass
+class MergeCoinsCommand(Command):
+    """."""
+
+    destination_coin: Union[str, dict]
+    source_coins: list[Union[str, dict]]
+
+
+@dataclass
+class TransferObjectsCommand(Command):
+    """."""
+
+    objects: list[Union[str, dict]]
+    recipient: Union[str, dict]
+
+
+@dataclass
+class MoveCallCommand(Command):
+    """."""
+
+    target: Union[str, dict]
+    arguments: list[Union[str, dict]]
+    type_arguments: list[Union[str, dict]]
+
+
+@dataclass
+class MakeMoveVecCommand(Command):
+    """."""
+
+    objects: list[Union[str, dict]]
+
+
+@dataclass
+class PublishCommand(Command):
+    """."""
+
+
+@dataclass
+class PublishUpgrade(Command):
+    """."""
+
+
+@dataclass
+class PublicTransferObject(Command):
+    """."""
+
+
+@dataclass
+class TransferSuiCommand(Command):
+    """."""
+
+
+@dataclass
+class SplitCoinEqualCommand(Command):
+    """."""
+
+
+@dataclass
+class SplitCoinAndReturnCommand(Command):
+    """."""
+
+
+@dataclass
+class StakeCoinCommand(Command):
+    """."""
+
+
+@dataclass
+class UnstakeCoinCommand(Command):
+    """."""
+
+
 @dataclass
 class Transaction(DataClassJsonMixin):
     """."""
@@ -128,6 +219,24 @@ class Transaction(DataClassJsonMixin):
             a_key, a_value = _build_alias_definition(alias)
             alias_map[a_key] = a_value
         self.aliases = alias_map
+        # Convert commands
+        c_list: list[Command] = []
+        for cmd in self.commands:
+            match cmd["builder_command"]:
+                case "split_coins":
+                    c_list.append(SplitCoinsCommand.from_dict(cmd))
+                case "merge_coins":
+                    c_list.append(MergeCoinsCommand.from_dict(cmd))
+                case "transfer_objects":
+                    c_list.append(TransferObjectsCommand.from_dict(cmd))
+                case "move_call":
+                    c_list.append(MoveCallCommand.from_dict(cmd))
+                case "make_move_vec":
+                    c_list.append(MakeMoveVecCommand.from_dict(cmd))
+                case "publish":
+                    c_list.append(PublishCommand.from_dict(cmd))
+                case _:
+                    raise ValueError(f"Unable to parse command {cmd}")
 
     def reconcile_alias_scope(self, global_alias: dict) -> None:
         """."""

@@ -6,36 +6,26 @@
     [
         {
             "name": "Owner",
-            "type": "address",
-            "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
-        },
-        {
-            "name": "Payer",
-            "type": "address",
-            "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
-        },
-        {
-            "name": "PaysWith",
-            "type": "object",
-            "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
+            "alias_type": "address",
+            "alias_value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
         },
         {
             "name": "MySpecialObject",
-            "type": "object",
-            "value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
+            "alias_type": "object",
+            "alias_value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
         },
         {
-            "name": "MintType",
-            "type": "string",
-            "value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
+            "name": "Mintalias_Type",
+            "alias_type": "object",
+            "alias_value": "0x1d29dc7cd4bdf15b20cab2f6c42e8c845e2b40e50935b8fb5900a15d6810984c"
         },
         {
             "name": "Mint",
-            "type": "move-function",
-            "value": "0xcc9f55f5403e5df0ec802b3bf6f9849e0fe85ae3fa29c166d066425aa96b6ea9::sample::mint",
+            "alias_type": "move-function",
+            "alias_value": "0xcc9f55f5403e5df0ec802b3bf6f9849e0fe85ae3fa29c166d066425aa96b6ea9::sample::mint",
             "has_return": true,
             "returns": "single",
-            "return_id": "mint_token"
+            "result": "mint_token"
         }
     ],
     "transactions": [
@@ -44,14 +34,11 @@
             "sender": {
                 "$ref": "#Owner"
             },
-            "sponsor": {
-                "$ref": "#Payer"
-            },
             "aliases": [
                 {
                     "name": "Reciever",
-                    "type": "address",
-                    "value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
+                    "alias_type": "address",
+                    "alias_value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
                 }
 
             ],
@@ -65,10 +52,10 @@
                     },
                     "arguments": [
                         {
-                            "$ref": "#MintType"
+                            "$ref": "#Mintalias_Type"
                         }
                     ],
-                    "type-arguments":
+                    "type_arguments":
                     [
                         "x::y::z"
                     ]

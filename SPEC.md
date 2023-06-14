@@ -2,6 +2,8 @@
 
 L-EBNF: Lazy (me) with very rusty EBNF memory... but here goes
 
+NOT TESTED AT ALL so AMBIGUITY ABOUNDS!!!
+
 Hints:
 
 - \+ = One or more
@@ -50,7 +52,7 @@ function_arguments
     ;
 
 function_argument
-    : name required type item?
+    : name required argument_type item?
     ;
 
 
@@ -68,14 +70,27 @@ aliases:
     ;
 
 alias
-    : name alias_type value
+    : name alias_type alias_value
 
 (***************************************************************************************)
 (* low level productions and terminals                                                 *)
 (***************************************************************************************)
 
+alias_type
+    : ("string" | "number" | "object" | "address")?
+    ;
+
+alias_value
+    : string | number | address | object | backref
+    ;
+
+(* can be used to refer back to an alias (i.e. alias of alias) *)
+backref
+    : "$ref" : "#" string
+    ;
+
 (* type describes the form an argument can take *)
-type
+argument_type
     : ("string"? | "number"? | "object-id"? | "gas"? | result? | alias?)*
     | "list" item
     ;
@@ -108,11 +123,35 @@ name
 
 (* Should be standardized, consider semantic versioning as well *)
 version
-    : [a-zA-Z][a-zA-Z0-9]{0,10}
+    : [a-zA-Z][0-9]{2,10}
     ;
 
 description
     : (* utf-8 regex for one or more words in quotes *)
+    ;
+
+number
+    : unsigned
+    (* others? i.e. decimal, etc. *)
+    ;
+
+object:
+    : address
+    ;
+
+address:
+    : 0[x|X][0-9]{64,64}
+    | [0-9]{64,64}
+    ;
+
+unsigned
+    (* u8 through u256 *)
+    : [0-9]{1}
+    | [0-9]{2}
+    | [0-9]{4}
+    | [0-9]{8}
+    | [0-9]{16}
+    | [0-9]{32}
     ;
 
 ```

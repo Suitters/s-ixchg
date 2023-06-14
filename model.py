@@ -6,65 +6,11 @@ from dataclasses_json import DataClassJsonMixin, LetterCase, config
 
 
 @dataclass
-class AddressAlias(DataClassJsonMixin):
+class NumberAlias(DataClassJsonMixin):
     """."""
 
     alias_type: str
-    value: Union[str, dict]
-
-    def as_pysui_type(self) -> Any:
-        """."""
-        return self
-
-    def as_bcs_type(self) -> Any:
-        """."""
-        return self
-
-
-@dataclass
-class ObjectAlias(DataClassJsonMixin):
-    """."""
-
-    alias_type: str
-    value: Union[str, dict]
-
-    def as_pysui_type(self) -> Any:
-        """."""
-        return self
-
-    def as_bcs_type(self) -> Any:
-        """."""
-        return self
-
-
-@dataclass
-class MoveFunctionAlias(DataClassJsonMixin):
-    """."""
-
-    alias_type: str
-    value: Any
-    has_return: bool
-    returns: str
-    return_id: str
-
-    def as_pysui_type(self) -> Any:
-        """."""
-        return self
-
-    def as_bcs_type(self) -> Any:
-        """."""
-        return self
-
-
-@dataclass
-class BuilderFunctionAlias(DataClassJsonMixin):
-    """."""
-
-    alias_type: str
-    value: Any
-    has_return: bool
-    returns: str
-    return_id: str
+    alias_value: Union[str, dict]
 
     def as_pysui_type(self) -> Any:
         """."""
@@ -80,7 +26,58 @@ class StringAlias(DataClassJsonMixin):
     """."""
 
     alias_type: str
-    value: Union[str, dict]
+    alias_value: Union[str, dict]
+
+    def as_pysui_type(self) -> Any:
+        """."""
+        return self
+
+    def as_bcs_type(self) -> Any:
+        """."""
+        return self
+
+
+@dataclass
+class AddressAlias(DataClassJsonMixin):
+    """."""
+
+    alias_type: str
+    alias_value: Union[str, dict]
+
+    def as_pysui_type(self) -> Any:
+        """."""
+        return self
+
+    def as_bcs_type(self) -> Any:
+        """."""
+        return self
+
+
+@dataclass
+class ObjectAlias(DataClassJsonMixin):
+    """."""
+
+    alias_type: str
+    alias_value: Union[str, dict]
+
+    def as_pysui_type(self) -> Any:
+        """."""
+        return self
+
+    def as_bcs_type(self) -> Any:
+        """."""
+        return self
+
+
+@dataclass
+class MoveFunctionAlias(DataClassJsonMixin):
+    """."""
+
+    alias_type: str
+    alias_value: Union[str, dict]
+    has_return: bool
+    returns: str
+    result: str
 
     def as_pysui_type(self) -> Any:
         """."""
@@ -93,20 +90,20 @@ class StringAlias(DataClassJsonMixin):
 
 def _build_alias_definition(alias_def: dict) -> Union[tuple[str, Any], Exception]:
     """."""
-    if "type" in alias_def:
+    if "alias_type" in alias_def:
         name = alias_def["name"]
-        alias_def["alias_type"] = alias_def.pop("type")
+        # alias_def["alias_type"] = alias_def.pop("type")
         match alias_def["alias_type"]:
+            case "number":
+                a_alias = NumberAlias.from_dict(alias_def)
+            case "string":
+                a_alias = StringAlias.from_dict(alias_def)
             case "address":
                 a_alias = AddressAlias.from_dict(alias_def)
             case "object":
                 a_alias = ObjectAlias.from_dict(alias_def)
-            case "builder-function":
-                a_alias = BuilderFunctionAlias.from_dict(alias_def)
             case "move-function":
                 a_alias = MoveFunctionAlias.from_dict(alias_def)
-            case "string":
-                a_alias = StringAlias.from_dict(alias_def)
             case _:
                 raise ValueError(f"Alias type {alias_def['alias_type']} not implemented")
         return name, a_alias
@@ -135,15 +132,15 @@ class Transaction(DataClassJsonMixin):
     def reconcile_alias_scope(self, global_alias: dict) -> None:
         """."""
         for a_key, a_value in self.aliases.items():
-            if isinstance(a_value.value, dict):
-                if "$ref" in a_value.value and a_value.value["$ref"][0] == "#":
-                    target: str = a_value.value["$ref"][1:]
+            if isinstance(a_value.alias_value, dict):
+                if "$ref" in a_value.alias_value and a_value.alias_value["$ref"][0] == "#":
+                    target: str = a_value.alias_value["$ref"][1:]
                     if target.count("/"):
                         components = target.split("/")
                         target = self.aliases[components[0]]
                         for comp in components[1:]:
                             target = getattr(target, comp)
-                        a_value.value = target
+                        a_value.alias_value = target
                     else:
                         self.aliases[a_key] = self.aliases[target]
 
@@ -168,21 +165,26 @@ class Module(DataClassJsonMixin):
         self.aliases = alias_map
         # Reconcile global 'ref' types
         for a_key, a_value in self.aliases.items():
-            if isinstance(a_value.value, dict):
-                if "$ref" in a_value.value and a_value.value["$ref"][0] == "#":
-                    target: str = a_value.value["$ref"][1:]
+            if isinstance(a_value.alias_value, dict):
+                if "$ref" in a_value.alias_value and a_value.alias_value["$ref"][0] == "#":
+                    target: str = a_value.alias_value["$ref"][1:]
                     if target.count("/"):
                         components = target.split("/")
                         target = self.aliases[components[0]]
                         for comp in components[1:]:
                             target = getattr(target, comp)
-                        a_value.value = target
+                        a_value.alias_value = target
                     else:
                         self.aliases[a_key] = self.aliases[target]
 
         # Reconcile transaction scope alias 'ref' types
         for txn in self.transactions:
             txn.reconcile_alias_scope(self.aliases)
+
+    @classmethod
+    def debug(cls, in_data: dict):
+        """."""
+        print(in_data)
 
 
 @dataclass

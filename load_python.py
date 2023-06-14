@@ -21,6 +21,8 @@ def read_it(pss_spec: str) -> None:
         library.extend_base(LibraryExtension.from_dict(json.loads(base_ext.read_bytes())))
     for child in lib_path.iterdir():
         if not (child.stem == "builder" or child.stem == "builder_extension") and child.suffix == ".json":
+            # in_data = json.loads(child.read_bytes())
+            # library.add_module(Module.debug(in_data))
             library.add_module(Module.from_dict(json.loads(child.read_bytes())))
     print(library.to_json(indent=2))
 

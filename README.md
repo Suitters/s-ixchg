@@ -4,7 +4,8 @@
 
 Sui transaction interchange specification
 
-THIS IS A WIP and open to constructive criticisms and ideas! Just post them in the Issues....
+While I put as much as I can to demonstrate **THIS IS A WIP** and open to constructive criticisms and ideas!
+Just post them in the Issues....
 
 ### What it is
 
@@ -36,8 +37,9 @@ The 'lazy' EBNF spec is in **SPEC.md**
 
 ## Caveats
 
-- Security: Becuase transactions require signing (senders, sponsors) it would mean two applications communicating
-  s-ixchg need to be aware of those keys
+- Security: Need to think this through. For example:
+  - Becuase transactions require signing (senders, sponsors) it would imply two applications communicating
+    s-ixchg need to be aware of those address keys
 
 ## Layout
 
@@ -55,6 +57,8 @@ the files about their constructs.
   - sample.jsonc - Contrived
 
 ## Running python example
+
+Included is an incomplete yet demonstrable ingestion of s-ixchg using Python
 
 From repo root:
 

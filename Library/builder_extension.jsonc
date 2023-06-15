@@ -1,9 +1,16 @@
 {
+    /*
+    builder_extension describes additional builder functions, or
+    replacement for existing functions at the SDK level as
+    indicated by the 'extension_for' key value
+    */
+
     "version": "V1",
     "extension_for": "pysui",
     "builderFunctions":
     [
         {
+            // Publish a sui contract from project source
             "name": "publish",
             "function_arguments": [
                 {
@@ -32,6 +39,7 @@
             "result": "upgrade_cap"
         },
         {
+            // Upgrade a previously published contract
             "name": "publish_upgrade",
             "function_arguments": [
                 {
@@ -70,6 +78,7 @@
             "result": "upgrade_cap"
         },
         {
+            // Public transfer for arbitrary objects
             "name": "public_transfer_object",
             "function_arguments": [
                 {
@@ -86,6 +95,7 @@
             "has_return": false
         },
         {
+            // Transfer to recipient, amount from existing Sui coins
             "name": "transfer_sui",
             "function_arguments": [
                 {
@@ -96,7 +106,7 @@
                 {
                     "name": "from_coin",
                     "required": true,
-                    "argument_type": ["object-id","result"]
+                    "argument_type": ["object-id","result","gas","result"]
                 },
                 {
                     "name": "amount",
@@ -107,6 +117,7 @@
             "has_return": false
         },
         {
+            // Split a coin (of type) into equal parts
             "name": "split_coin_equal",
             "function_arguments": [
                 {
@@ -128,6 +139,8 @@
             "has_return": false
         },
         {
+            // Like split_coin_equal but splits are returns from the function
+            // and can be used in subsequent commands
             "name": "split_coin_and_return",
             "function_arguments": [
                 {
@@ -151,6 +164,7 @@
             "result": "split_results"
         },
         {
+            // Stake Sui coins with validator
             "name": "stake_coin",
             "function_arguments": [
                 {
@@ -173,6 +187,7 @@
             "has_return": false
         },
         {
+            // Unstake Sui coin from validator
             "name": "unstake_coin",
             "function_arguments": [
                 {

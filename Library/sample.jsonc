@@ -10,8 +10,10 @@
     "description": "A sample for demonstration",
     "version": "V1",
     // Define aliases at the module scope
+    // alias types may be one of string, number, object, address or move-function
     "aliases":
     [
+        // An alias can just be a literal
         {
             "name": "Owner",
             "alias_type": "address",
@@ -24,13 +26,24 @@
             "alias_value": {
                 "$ref": "#Owner"
             }
+        },
+        // An alias can also encapsulate more complex information
+        // like a contract function
+        {
+            "name": "Mint",
+            "type": "move-function",
+            "value": "0xcc9f55f5403e5df0ec802b3bf6f9849e0fe85ae3fa29c166d066425aa96b6ea9::sample::mint",
+            "has_return": true,
+            "returns": "single",
+            "return_id": "mint_token"
         }
     ],
     // Define one or more transactions available in this module
     // Each transaction marks an execution boundary
     "transactions": [
         {
-            // Name it for reference
+            // Name it for reference and semantics
+            // (i.e. CreatePO, ApprovePO, CancelPO, SubmitPO, etc.)
             "name":"MoveCoin",
             // Set the sender (optional) here. sponsor is also an attribute
             "sender": {
@@ -49,10 +62,9 @@
             // Articulate the commands for this transaction
             "commands":[
                 {
-                    // Names are defined by designer. Something more complex
-                    // may be domain examples (i.e. CreatePO)
+                    // Names are defined by designer.
                     "name": "SplitCoin",
-                    // Always refers to a builder command/function
+                    // Always refers to a builder command function
                     "builder_command": "split_coins",
                     // Align to the arguments and types defined in the builder functions
                     "coin": "gas",
@@ -64,7 +76,8 @@
                     "objects":
                     [
                         // Demonstrate using the result of a transactions command
-                        // as input into this command
+                        // as input into this command. This refers back to the
+                        // output of a prior command.
                         {
                             "$ref": "#SplitCoin/coin_result"
                         }

@@ -240,6 +240,7 @@ class Transaction(DataClassJsonMixin):
 
     def reconcile_alias_scope(self, global_alias: dict) -> None:
         """."""
+        # Reconcile tx aliases with module alias
         for a_key, a_value in self.aliases.items():
             if isinstance(a_value.alias_value, dict):
                 if "$ref" in a_value.alias_value and a_value.alias_value["$ref"][0] == "#":
@@ -272,28 +273,29 @@ class Module(DataClassJsonMixin):
             a_key, a_value = _build_alias_definition(alias)
             alias_map[a_key] = a_value
         self.aliases = alias_map
-        # Reconcile global 'ref' types
+        # Reconcile global 'ref' types within global scope
+        # Refs can only refer to aliases within this scope
+        # This should be refactored along with Transaction.reconcile_alias_scope
         for a_key, a_value in self.aliases.items():
             if isinstance(a_value.alias_value, dict):
                 if "$ref" in a_value.alias_value and a_value.alias_value["$ref"][0] == "#":
-                    target: str = a_value.alias_value["$ref"][1:]
-                    if target.count("/"):
-                        components = target.split("/")
-                        target = self.aliases[components[0]]
-                        for comp in components[1:]:
-                            target = getattr(target, comp)
-                        a_value.alias_value = target
-                    else:
-                        self.aliases[a_key] = self.aliases[target]
+                    self.aliases[a_key] = self.aliases[a_value.alias_value["$ref"][1:]]
+                    # Ignore
+                    # target: str = a_value.alias_value["$ref"][1:]
+                    # if target.count("/"):
+                    #     components = target.split("/")
+                    #     target = self.aliases[components[0]]
+                    #     for comp in components[1:]:
+                    #         target = getattr(target, comp)
+                    #     a_value.alias_value = target
+                    # else:
+                    #     self.aliases[a_key] = self.aliases[target]
+                elif "$ref" in a_value.alias_value:
+                    raise ValueError(f"{a_key} {a_value.alias_value} syntax error. Expected '#' reference symbol")
 
         # Reconcile transaction scope alias 'ref' types
         for txn in self.transactions:
             txn.reconcile_alias_scope(self.aliases)
-
-    @classmethod
-    def debug(cls, in_data: dict):
-        """."""
-        print(in_data)
 
 
 @dataclass
@@ -366,5 +368,5 @@ class Library(DataClassJsonMixin):
         self.extension_for = extension.extension_for
 
     def add_module(self, module: Module):
-        """Append new module."""
+        """Append new module and resolve references."""
         self.modules[module.name] = module

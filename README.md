@@ -41,11 +41,27 @@ The 'lazy' EBNF spec is in **SPEC.md**
 
 ## Layout
 
+Note: Library json files are jsonc (JSON with comments). This is not set in stone as other
+languages may not support or have libraries for it, but is currently used to provide more details in
+the files about their constructs.
+
 - README.md - This
 - SPEC.md - Hacked EBNF
 - modely.py - dataclasses for python only
 - load_python.py - demo loader
 - Library - Sample repository (assume maintained by SDK if persisted)
-  - builder.json - Base SDK programmable transaction builder capabilities
-  - builder_extension.json - `pysui` builder extensions/overrides
-  - sample.json - Contrived
+  - builder.jsonc - Base SDK programmable transaction builder capabilities
+  - builder_extension.jsonc - `pysui` builder extensions/overrides
+  - sample.jsonc - Contrived
+
+## Running python example
+
+From repo root:
+
+```bash
+python3 -m venv env
+. env/bin/activate
+pip install -U pip
+pip install -r requirements.txt
+python load_python.py
+```

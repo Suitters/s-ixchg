@@ -1,27 +1,47 @@
 {
+    /*
+    Builder describes the standard builder functions that should
+    be available in the builder implementation
+
+    These can be overriden in builder_extensions
+    */
     "version": "V1",
     "builderFunctions":
     [
         {
+            // Create new coins (n) from source coin with n amounts respetivly
             "name": "split_coins",
             "function_arguments": [
                 {
+                    // Argument names allow for ease of use in transaction command
+                    // function parameters and/or move call arguments
                     "name": "coin",
+                    // true/false
                     "required": true,
+                    // Indicates the forms an argument of this type are supported
+                    // 'gas' and 'result' are reserved
                     "argument_type": ["string","object-id","gas","result"]
                 },
                 {
                     "name": "amounts",
                     "required": true,
+                    // Indicates argument is a list with a homogeneous element type
+                    // 'gas' and 'result' are reserved
                     "argument_type": ["list"],
                     "item":["integer"]
                 }
             ],
+            // If has return, describe the return information
+            // i.e. if a function has a return it can potentially
+            // be used in subsequent functions vis-a-vis module commands
             "has_return": true,
+            // Indicate that this function can returm multiple results
             "returns": "multiple",
+            // Give it a name for easy reference
             "result": "coin_result"
         },
         {
+            // Merge into destination, one or more coins in source
             "name": "merge_coins",
             "function_arguments": [
                 {
@@ -32,13 +52,17 @@
                 {
                     "name": "source_coins",
                     "required": true,
+                    // Indicates argument is a list with a heterogenous element types accepted
+                    // 'gas' and 'result' are reserved
                     "argument_type": ["list"],
                     "item": ["string","object-id","result"]
                 }
             ],
+            // Case where there is no return that can be used elsewhere
             "has_return": false
         },
         {
+            // Send one or more objects to another address
             "name": "transfer_objects",
             "function_arguments": [
                 {
@@ -53,9 +77,11 @@
                     "argument_type": ["string","address"]
                 }
             ],
+            // Case where there is no return that can be used elsewhere
             "has_return": false
         },
         {
+            // Invoke a chain contract function
             "name": "move_call",
             "function_arguments": [
                 {
@@ -77,10 +103,15 @@
                 }
             ],
             "has_return": true,
+            // In the case of move calls, it is unknown at this level
+            // if the target truely does return, there may not be a return
+            // and is up to the implementation to reconcile at the moment
             "returns": "multiple",
             "result": "call_result"
         },
         {
+            // Create a vector of objects
+            // Primarily used to prepare object vectors as argument to move_call
             "name": "make_move_vec",
             "function_arguments": [
                 {
@@ -96,6 +127,7 @@
 
         },
         {
+            // Publish a Sui contract to the chain
             "name": "publish",
             "function_arguments": [
                 {

@@ -1,0 +1,59 @@
+{
+    "name": "sample",
+    "description": "A sample for demonstration",
+    "version": "V1",
+    "aliases":
+    [
+        {
+            "name": "Owner",
+            "alias_type": "address",
+            "alias_value": "0xa9e2db385f055cc0215a3cde268b76270535b9443807514f183be86926c219f4"
+        },
+        {
+            "name": "AliasOwner1",
+            "alias_type": "address",
+            "alias_value": {
+                "$ref": "#Owner"
+            }
+        }
+    ],
+    "transactions": [
+        {
+            "name":"MoveCoin",
+            "sender": {
+                "$ref": "#Owner"
+            },
+            "aliases": [
+                {
+                    "name": "Reciever",
+                    "alias_type": "address",
+                    "alias_value": "0x0c2bbc042e4ce750ee98ce017bee8ddbfc8b70da00979374bf9c0964ce02e3ed"
+                }
+
+            ],
+            "commands":[
+                {
+                    "name": "SplitCoin",
+                    "builder_command": "split_coins",
+                    "coin": "gas",
+                    "amounts": [1000000]
+                },
+                {
+                    "name": "SendCoinTo",
+                    "builder_command": "transfer_objects",
+                    "objects":
+                    [
+                        {
+                            "$ref": "#SplitCoin/coin_result"
+                        }
+                    ],
+                    "recipient":
+                    {
+                        "$ref": "#Reciever"
+                    }
+                }
+            ]
+        }
+    ]
+
+}

@@ -1,0 +1,2 @@
+dataclasses_json==0.5.8
+jsonc-parser==1.1.5

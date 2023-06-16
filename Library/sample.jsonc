@@ -1,7 +1,7 @@
 {
     /*
     Modules are user defined and contain specific transaction instructions
-    that can be run without interaction or not depending on implementation
+    that can be run without interaction or not depending on implementation.
 
     This sample is pretty simple and just demonstrates various other options
     available to the designer
@@ -26,17 +26,17 @@
             "alias_value": {
                 "$ref": "#Owner"
             }
-        }
+        },
         // An alias can also encapsulate more complex information
         // like a contract function
-        // {
-        //     "name": "Mint",
-        //     "type": "move-function",
-        //     "value": "0xcc9f55f5403e5df0ec802b3bf6f9849e0fe85ae3fa29c166d066425aa96b6ea9::sample::mint",
-        //     "has_return": true,
-        //     "returns": "single",
-        //     "return_id": "mint_token"
-        // }
+        {
+            "name": "Mint",
+            "alias_type": "move-function",
+            "alias_value": "0xcc9f55f5403e5df0ec802b3bf6f9849e0fe85ae3fa29c166d066425aa96b6ea9::sample::mint",
+            "has_return": true,
+            "returns": "single",
+            "result": "mint_token"
+        }
     ],
     // Define one or more transactions available in this module
     // Each transaction marks an execution boundary
@@ -55,7 +55,10 @@
                 {
                     "name": "Reciever",
                     "alias_type": "address",
-                    "alias_value": "0x0c2bbc042e4ce750ee98ce017bee8ddbfc8b70da00979374bf9c0964ce02e3ed"
+                    // "alias_value": "0x0c2bbc042e4ce750ee98ce017bee8ddbfc8b70da00979374bf9c0964ce02e3ed"
+                    "alias_value": {
+                        "$ref": "#Owner"
+                    }
                 }
 
             ],

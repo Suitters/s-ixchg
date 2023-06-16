@@ -161,44 +161,100 @@ class MakeMoveVecCommand(Command):
     objects: list[Union[str, dict]]
 
 
+# pysui treatments
+
+
 @dataclass
 class PublishCommand(Command):
     """."""
 
+    project_path: str
+    with_unpublished_dependencies: Optional[bool]
+    skip_fetch_latest_git_deps: Optional[bool]
+    legacy_digest: Optional[bool]
+
 
 @dataclass
-class PublishUpgrade(Command):
+class PublishUpgradeCommand(Command):
     """."""
+
+    project_path: str
+    package_id: str
+    upgrade_cap: str
+    with_unpublished_dependencies: Optional[bool]
+    skip_fetch_latest_git_deps: Optional[bool]
+    legacy_digest: Optional[bool]
 
 
 @dataclass
-class PublicTransferObject(Command):
+class PublicTransferObjectCommand(Command):
     """."""
+
+    object_to_send: str
+    recipient: str
+    object_type: str
 
 
 @dataclass
 class TransferSuiCommand(Command):
     """."""
 
+    recipient: str
+    from_coin: str
+    amount: str
+
 
 @dataclass
 class SplitCoinEqualCommand(Command):
     """."""
+
+    coin: str
+    split_count: str
+    coin_type: str
 
 
 @dataclass
 class SplitCoinAndReturnCommand(Command):
     """."""
 
+    coin: str
+    split_count: str
+    coin_type: str
+
 
 @dataclass
 class StakeCoinCommand(Command):
     """."""
 
+    coins: list[str]
+    validator_address: str
+    amount: str
+
 
 @dataclass
 class UnstakeCoinCommand(Command):
     """."""
+
+    staked_coin: str
+
+
+def _resolve_alias(base_alias: dict, value: dict, global_alias: Optional[dict] = None) -> dict:
+    """."""
+    if "$ref" in value.alias_value and value.alias_value["$ref"][0] == "#":
+        target: str = value.alias_value["$ref"][1:]
+        if target.count("/"):
+            components = target.split("/")
+            target = base_alias[components[0]]
+            for comp in components[1:]:
+                target = getattr(target, comp)
+            value.alias_value = target
+        elif target in base_alias:
+            target = base_alias[target]
+        elif global_alias and target in global_alias:
+            target = global_alias[target]
+        else:
+            raise ValueError(f"Unable to resolve {target}")
+    return target
 
 
 @dataclass
@@ -235,6 +291,20 @@ class Transaction(DataClassJsonMixin):
                     c_list.append(MakeMoveVecCommand.from_dict(cmd))
                 case "publish":
                     c_list.append(PublishCommand.from_dict(cmd))
+                case "publish_upgrade":
+                    c_list.append(PublishUpgradeCommand.from_dict(cmd))
+                case "public_transfer_object":
+                    c_list.append(PublicTransferObjectCommand.from_dict(cmd))
+                case "transfer_sui":
+                    c_list.append(TransferSuiCommand.from_dict(cmd))
+                case "split_coin_equal":
+                    c_list.append(SplitCoinEqualCommand.from_dict(cmd))
+                case "split_coin_and_return":
+                    c_list.append(SplitCoinAndReturnCommand.from_dict(cmd))
+                case "stake_coin":
+                    c_list.append(StakeCoinCommand.from_dict(cmd))
+                case "unstake_coin":
+                    c_list.append(UnstakeCoinCommand.from_dict(cmd))
                 case _:
                     raise ValueError(f"Unable to parse command {cmd}")
 
@@ -243,16 +313,17 @@ class Transaction(DataClassJsonMixin):
         # Reconcile tx aliases with module alias
         for a_key, a_value in self.aliases.items():
             if isinstance(a_value.alias_value, dict):
-                if "$ref" in a_value.alias_value and a_value.alias_value["$ref"][0] == "#":
-                    target: str = a_value.alias_value["$ref"][1:]
-                    if target.count("/"):
-                        components = target.split("/")
-                        target = self.aliases[components[0]]
-                        for comp in components[1:]:
-                            target = getattr(target, comp)
-                        a_value.alias_value = target
-                    else:
-                        self.aliases[a_key] = self.aliases[target]
+                self.aliases[a_key] = _resolve_alias(self.aliases, a_value, global_alias)
+
+        # Resolve sender and sponsor aliases (if needed)
+        if self.sender:
+            if isinstance(self.sender, dict):
+                sender_alias = Alias.from_dict({"alias_type": "", "alias_value": self.sender})
+                self.sender = _resolve_alias(self.aliases, sender_alias, global_alias)
+        if self.sponsor:
+            if isinstance(self.sponsor, dict):
+                sponsor_alias = Alias.from_dict({"alias_type": "", "alias_value": self.sponsor})
+                self.sponsor = _resolve_alias(self.aliases, sponsor_alias, global_alias)
 
 
 @dataclass
@@ -275,23 +346,10 @@ class Module(DataClassJsonMixin):
         self.aliases = alias_map
         # Reconcile global 'ref' types within global scope
         # Refs can only refer to aliases within this scope
-        # This should be refactored along with Transaction.reconcile_alias_scope
         for a_key, a_value in self.aliases.items():
             if isinstance(a_value.alias_value, dict):
                 if "$ref" in a_value.alias_value and a_value.alias_value["$ref"][0] == "#":
-                    self.aliases[a_key] = self.aliases[a_value.alias_value["$ref"][1:]]
-                    # Ignore
-                    # target: str = a_value.alias_value["$ref"][1:]
-                    # if target.count("/"):
-                    #     components = target.split("/")
-                    #     target = self.aliases[components[0]]
-                    #     for comp in components[1:]:
-                    #         target = getattr(target, comp)
-                    #     a_value.alias_value = target
-                    # else:
-                    #     self.aliases[a_key] = self.aliases[target]
-                elif "$ref" in a_value.alias_value:
-                    raise ValueError(f"{a_key} {a_value.alias_value} syntax error. Expected '#' reference symbol")
+                    self.aliases[a_key] = _resolve_alias(self.aliases, a_value)
 
         # Reconcile transaction scope alias 'ref' types
         for txn in self.transactions:

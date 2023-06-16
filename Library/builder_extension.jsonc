@@ -29,9 +29,9 @@
                     "argument_type": ["boolean"]
                 },
                 {
-                    "name": "recipient",
+                    "name": "legacy_digest",
                     "required": false,
-                    "argument_type": ["address"]
+                    "argument_type": ["boolean"]
                 }
             ],
             "has_return": true,
@@ -82,16 +82,20 @@
             "name": "public_transfer_object",
             "function_arguments": [
                 {
-                    "name": "objects",
+                    "name": "object_to_send",
                     "required": true,
                     "argument_type": ["object-id","result"]
                 },
                 {
-                    "name": "address",
+                    "name": "recipient",
                     "required": true,
                     "argument_type": ["string","address"]
-                }
-            ],
+                },
+                {
+                    "name": "object_type",
+                    "required": true,
+                    "argument_type": ["string"]
+                }            ],
             "has_return": false
         },
         {
@@ -126,12 +130,12 @@
                     "argument_type": ["string","object-id","gas","result"]
                 },
                 {
-                    "name": "count",
+                    "name": "split_count",
                     "required": true,
                     "argument_type": ["integer"]
                 },
                 {
-                    "name": "coin_argument_type",
+                    "name": "coin_type",
                     "required": false,
                     "argument_type": ["string"]
                 }
@@ -149,12 +153,12 @@
                     "argument_type": ["string","object-id","gas","result"]
                 },
                 {
-                    "name": "count",
+                    "name": "split_count",
                     "required": true,
                     "argument_type": ["integer"]
                 },
                 {
-                    "name": "coin_argument_type",
+                    "name": "coin_type",
                     "required": false,
                     "argument_type": ["string"]
                 }
@@ -191,7 +195,7 @@
             "name": "unstake_coin",
             "function_arguments": [
                 {
-                    "name": "coin",
+                    "name": "staked_coin",
                     "required": true,
                     "argument_type": ["object-id"]
                 }

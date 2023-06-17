@@ -8,7 +8,7 @@ from jsonc_parser.parser import JsoncParser
 from model import *
 
 
-def read_it(pss_spec: str) -> None:
+def read_it(pss_spec: str) -> Library:
     """read_it _summary_.
 
     :param pss_spec: _description_
@@ -28,8 +28,8 @@ def read_it(pss_spec: str) -> None:
     for child in lib_path.iterdir():
         if not (child.stem == "builder" or child.stem == "builder_extension") and child.suffix == ".jsonc":
             library.add_module(Module.from_dict(JsoncParser.parse_file(child)))
-    print(library.to_json(indent=2))
+    return library
 
 
 if __name__ == "__main__":
-    read_it("Library")
+    print(read_it("Library").to_json(indent=2))

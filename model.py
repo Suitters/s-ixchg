@@ -307,6 +307,7 @@ class Transaction(DataClassJsonMixin):
                     c_list.append(UnstakeCoinCommand.from_dict(cmd))
                 case _:
                     raise ValueError(f"Unable to parse command {cmd}")
+        self.commands = c_list
 
     def reconcile_alias_scope(self, global_alias: dict) -> None:
         """."""
@@ -324,6 +325,45 @@ class Transaction(DataClassJsonMixin):
             if isinstance(self.sponsor, dict):
                 sponsor_alias = Alias.from_dict({"alias_type": "", "alias_value": self.sponsor})
                 self.sponsor = _resolve_alias(self.aliases, sponsor_alias, global_alias)
+
+    def verify_commands(self, build_funcs: dict) -> None:
+        """."""
+
+        def is_alias_arg(in_bound: dict) -> tuple[bool, bool]:
+            """."""
+            is_alias: bool = False
+            is_cmd_alias: bool = False
+            if "$ref" in in_bound and in_bound["$ref"][0] == "#":
+                is_alias = True
+                if len(in_bound["$ref"][1:].split("/")) > 1:
+                    is_cmd_alias = True
+            return (is_alias, is_cmd_alias)
+
+        for cmd in self.commands:
+            if cmd.builder_command in build_funcs:
+                for f_args in build_funcs[cmd.builder_command].function_arguments:
+                    c_arg = getattr(cmd, f_args.name)
+                    # Check for aliases in a list
+                    if isinstance(c_arg, list):
+                        for c_index, c_item in enumerate(c_arg):
+                            if isinstance(c_item, dict):
+                                is_alias, is_cmd_alias = is_alias_arg(c_item)
+                                # Command aliases are resolved at runtime
+                                if is_alias and not is_cmd_alias:
+                                    temp_alias = Alias.from_dict({"alias_type": "", "alias_value": c_item})
+                                    c_arg[c_index] = _resolve_alias(self.aliases, temp_alias)
+                                else:
+                                    continue
+                    # Check if alias instance
+                    elif isinstance(c_arg, dict):
+                        is_alias, is_cmd_alias = is_alias_arg(c_arg)
+                        if is_alias and not is_cmd_alias:
+                            temp_alias = Alias.from_dict({"alias_type": "", "alias_value": c_arg})
+                            setattr(cmd, f_args.name, _resolve_alias(self.aliases, temp_alias))
+                    else:
+                        pass
+            else:
+                raise ValueError(f"Unknown builder function {cmd.builder_command}")
 
 
 @dataclass
@@ -428,3 +468,6 @@ class Library(DataClassJsonMixin):
     def add_module(self, module: Module):
         """Append new module and resolve references."""
         self.modules[module.name] = module
+
+        for txn in module.transactions:
+            txn.verify_commands(self.builder_functions)

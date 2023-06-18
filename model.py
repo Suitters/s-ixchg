@@ -238,22 +238,18 @@ class UnstakeCoinCommand(Command):
     staked_coin: str
 
 
-def _resolve_alias(base_alias: dict, value: dict, global_alias: Optional[dict] = None) -> dict:
+def _resolve_simple_alias(base_alias: dict, value: dict, global_alias: Optional[dict] = None) -> dict:
     """."""
     if "$ref" in value.alias_value and value.alias_value["$ref"][0] == "#":
         target: str = value.alias_value["$ref"][1:]
-        if target.count("/"):
-            components = target.split("/")
-            target = base_alias[components[0]]
-            for comp in components[1:]:
-                target = getattr(target, comp)
-            value.alias_value = target
-        elif target in base_alias:
+        if target in base_alias:
             target = base_alias[target]
         elif global_alias and target in global_alias:
             target = global_alias[target]
         else:
             raise ValueError(f"Unable to resolve {target}")
+    else:
+        target = value
     return target
 
 
@@ -314,17 +310,17 @@ class Transaction(DataClassJsonMixin):
         # Reconcile tx aliases with module alias
         for a_key, a_value in self.aliases.items():
             if isinstance(a_value.alias_value, dict):
-                self.aliases[a_key] = _resolve_alias(self.aliases, a_value, global_alias)
+                self.aliases[a_key] = _resolve_simple_alias(self.aliases, a_value, global_alias).alias_value
 
         # Resolve sender and sponsor aliases (if needed)
         if self.sender:
             if isinstance(self.sender, dict):
                 sender_alias = Alias.from_dict({"alias_type": "", "alias_value": self.sender})
-                self.sender = _resolve_alias(self.aliases, sender_alias, global_alias)
+                self.sender = _resolve_simple_alias(self.aliases, sender_alias, global_alias).alias_value
         if self.sponsor:
             if isinstance(self.sponsor, dict):
                 sponsor_alias = Alias.from_dict({"alias_type": "", "alias_value": self.sponsor})
-                self.sponsor = _resolve_alias(self.aliases, sponsor_alias, global_alias)
+                self.sponsor = _resolve_simple_alias(self.aliases, sponsor_alias, global_alias).alias_value
 
     def verify_commands(self, build_funcs: dict) -> None:
         """."""
@@ -351,15 +347,13 @@ class Transaction(DataClassJsonMixin):
                                 # Command aliases are resolved at runtime
                                 if is_alias and not is_cmd_alias:
                                     temp_alias = Alias.from_dict({"alias_type": "", "alias_value": c_item})
-                                    c_arg[c_index] = _resolve_alias(self.aliases, temp_alias)
-                                else:
-                                    continue
+                                    c_arg[c_index] = _resolve_simple_alias(self.aliases, temp_alias)
                     # Check if alias instance
                     elif isinstance(c_arg, dict):
                         is_alias, is_cmd_alias = is_alias_arg(c_arg)
                         if is_alias and not is_cmd_alias:
                             temp_alias = Alias.from_dict({"alias_type": "", "alias_value": c_arg})
-                            setattr(cmd, f_args.name, _resolve_alias(self.aliases, temp_alias))
+                            setattr(cmd, f_args.name, _resolve_simple_alias(self.aliases, temp_alias))
                     else:
                         pass
             else:
@@ -389,7 +383,7 @@ class Module(DataClassJsonMixin):
         for a_key, a_value in self.aliases.items():
             if isinstance(a_value.alias_value, dict):
                 if "$ref" in a_value.alias_value and a_value.alias_value["$ref"][0] == "#":
-                    self.aliases[a_key] = _resolve_alias(self.aliases, a_value)
+                    self.aliases[a_key] = _resolve_simple_alias(self.aliases, a_value)
 
         # Reconcile transaction scope alias 'ref' types
         for txn in self.transactions:
@@ -468,6 +462,6 @@ class Library(DataClassJsonMixin):
     def add_module(self, module: Module):
         """Append new module and resolve references."""
         self.modules[module.name] = module
-
+        # Perform validations and alias reconcilliations
         for txn in module.transactions:
             txn.verify_commands(self.builder_functions)

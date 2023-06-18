@@ -6,7 +6,7 @@
     This sample is pretty simple and just demonstrates various other options
     available to the designer
     */
-    "name": "sample",
+    "name": "Sample",
     "description": "A sample for demonstration",
     "version": "V1",
     // Define aliases at the module scope

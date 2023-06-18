@@ -49,7 +49,7 @@ the files about their constructs.
 
 - README.md - This
 - SPEC.md - Hacked EBNF
-- modely.py - dataclasses for python only
+- modely.py - dataclasses for python (faux implementation)
 - load_python.py - demo loader
 - Library - Sample repository (assume maintained by SDK if persisted)
   - builder.jsonc - Base SDK programmable transaction builder capabilities

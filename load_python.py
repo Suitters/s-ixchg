@@ -54,6 +54,6 @@ def summary(slib: Library) -> None:
 
 if __name__ == "__main__":
     # For just a summary
-    summary(load("Library"))
+    # summary(load("Library"))
     # For a full library dump
-    # print(load("Library").to_json(indent=2))
+    print(load("Library").to_json(indent=2))

@@ -1,3 +1,5 @@
 env/
 .vscode/
+.templates/
 __pycache__/
+gener_i.py

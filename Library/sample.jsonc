@@ -11,8 +11,7 @@
     "version": "V1",
     // Define aliases at the module scope
     // alias types may be one of string, number, object, address or move-function
-    "aliases":
-    [
+    "aliases": [
         // An alias can just be a literal
         {
             "name": "Owner",
@@ -44,7 +43,7 @@
         {
             // Name it for reference and semantics
             // (i.e. CreatePO, ApprovePO, CancelPO, SubmitPO, etc.)
-            "name":"MoveCoin",
+            "name": "MoveCoin",
             // Set the sender (optional) here. sponsor is also an attribute
             "sender": {
                 "$ref": "#Owner"
@@ -60,10 +59,9 @@
                         "$ref": "#Owner"
                     }
                 }
-
             ],
             // Articulate the commands for this transaction
-            "commands":[
+            "commands": [
                 {
                     // Names are defined by designer.
                     "name": "SplitCoin",
@@ -71,13 +69,14 @@
                     "builder_command": "split_coins",
                     // Align to the arguments and types defined in the builder functions
                     "coin": "gas",
-                    "amounts": [1000000]
+                    "amounts": [
+                        1000000
+                    ]
                 },
                 {
                     "name": "SendCoinTo",
                     "builder_command": "transfer_objects",
-                    "objects":
-                    [
+                    "objects": [
                         // Demonstrate using the result of a transactions command
                         // as input into this command. This refers back to the
                         // output of a prior command.
@@ -85,14 +84,49 @@
                             "$ref": "#SplitCoin/coin_result"
                         }
                     ],
-                    // Can be litereal or alias defined as well
-                    "recipient":
-                    {
+                    // Can be literal, alias or parameter
+                    "recipient": {
                         "$ref": "#Reciever"
+                    }
+                }
+            ]
+        },
+        {
+            // Use of parameters
+            "name": "MoveCoin2",
+            // Expected that the implementation provides at run-time
+            "sender": {
+                "?parameter": "FromAddress"
+            },
+            "commands": [
+                {
+                    // Names are defined by designer.
+                    "name": "SplitCoin2",
+                    // Always refers to a builder command function
+                    "builder_command": "split_coins",
+                    // Align to the arguments and types defined in the builder functions
+                    "coin": "gas",
+                    "amounts": [
+                        1000000
+                    ]
+                },
+                {
+                    "name": "SendCoinTo",
+                    "builder_command": "transfer_objects",
+                    "objects": [
+                        // Demonstrate using the result of a transactions command
+                        // as input into this command. This refers back to the
+                        // output of a prior command.
+                        {
+                            "$ref": "#SplitCoin2/coin_result"
+                        }
+                    ],
+                    // Can be literal, alias or parameter
+                    "recipient": {
+                        "?parameter": "ToAddress"
                     }
                 }
             ]
         }
     ]
-
 }

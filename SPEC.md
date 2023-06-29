@@ -73,11 +73,11 @@ transaction
     : name description? sender? sponsor? version aliases commands
 
 sender
-    : address | backref
+    : address | backref | parameter
     ;
 
 sponsor
-    : address | backref
+    : address | backref | parameter
     ;
 
 commands
@@ -112,6 +112,11 @@ alias_value
 (* can be used to refer back to an alias (i.e. alias of alias) *)
 backref
     : "$ref" : "#" string
+    ;
+
+(* can be used to defer resolution until run-time *)
+parameter
+    : "?parameter" : name
     ;
 
 (* type describes the form an argument can take *)
